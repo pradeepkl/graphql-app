@@ -16,4 +16,8 @@ public class OrderService {
     public Set<Order> fetchAllOrders(){
         return Set.copyOf(this.orderRepository.findAll());
     }
+
+    public Order getOrder(Long id){
+        return this.orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("invalid order id passed "));
+    }
 }
