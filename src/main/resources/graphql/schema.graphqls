@@ -12,6 +12,8 @@ type Query {
   ordersByDateRange(start: String!, end: String!): [Order]
 
   topCustomers(limit: Int!): [CustomerOrderSummary]
+
+  ordersPagedSorted(offset: Int!, limit: Int!, sortBy: OrderSortField!, direction: String!): OrderPage
 }
 
 type Order {
@@ -36,4 +38,19 @@ type Product {
 type CustomerOrderSummary {
   customerName: String
   totalOrders: Int
+}
+
+enum OrderSortField {
+  id
+  customerName,
+  email,
+  createdAt
+}
+
+type OrderPage {
+  content: [Order]
+  page: Int
+  size: Int
+  totalElements: Int
+  totalPages: Int
 }
