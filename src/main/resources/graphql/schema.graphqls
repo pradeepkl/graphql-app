@@ -2,6 +2,7 @@ type Query {
   hello: String
   order(id: ID!): Order
   orders: [Order]
+  products: [Product]
 }
 
 type Order {
@@ -9,4 +10,15 @@ type Order {
   customerName: String
   email: String
   createdDate: String
+}
+
+type LineItem {
+  id: ID!
+  qty: Int
+  product: Product
+}
+
+type Product {
+  id: ID!
+  name: String
 }
