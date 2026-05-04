@@ -1,8 +1,15 @@
 type Query {
   hello: String
+
   order(id: ID!): Order
+
   orders: [Order]
+
   products: [Product]
+
+  ordersByCustomer(name: String!): [Order]
+
+  ordersByDateRange(start: String!, end: String!): [Order]
 }
 
 type Order {

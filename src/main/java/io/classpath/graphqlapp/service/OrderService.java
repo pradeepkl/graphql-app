@@ -20,4 +20,8 @@ public class OrderService {
     public Order getOrder(Long id){
         return this.orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("invalid order id passed "));
     }
+
+    public Set<Order> findByCustomerName(String name){
+        return Set.copyOf(this.orderRepository.findByCustomerName(name));
+    }
 }

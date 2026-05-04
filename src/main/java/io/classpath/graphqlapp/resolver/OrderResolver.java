@@ -43,6 +43,12 @@ public class OrderResolver {
         return this.productService.getProduct(lineItem.getProductId());
     }
 
+    @QueryMapping
+    public Set<Order> ordersByCustomer(@Argument String name){
+        System.out.println("Inside the ordersByCustomer method ::");
+        return this.orderService.findByCustomerName(name);
+    }
+
 
 
 }

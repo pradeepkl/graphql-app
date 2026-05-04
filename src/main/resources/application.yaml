@@ -1,3 +1,22 @@
 spring:
   application:
     name: graphql-app
+    sql:
+      init:
+        mode: always
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  datasource:
+    username: sa
+    password: welcome
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+  graphql:
+    graphiql:
+      enabled: true
