@@ -1,3 +1,11 @@
 type Query {
   hello: String
+  orders: [Order]
+}
+
+type Order {
+  id: ID!
+  customerName: String
+  email: String
+  createdDate: String
 }
