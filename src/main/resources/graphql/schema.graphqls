@@ -10,6 +10,8 @@ type Query {
   ordersByCustomer(name: String!): [Order]
 
   ordersByDateRange(start: String!, end: String!): [Order]
+
+  topCustomers(limit: Int!): [CustomerOrderSummary]
 }
 
 type Order {
@@ -29,4 +31,9 @@ type LineItem {
 type Product {
   id: ID!
   name: String
+}
+
+type CustomerOrderSummary {
+  customerName: String
+  totalOrders: Int
 }

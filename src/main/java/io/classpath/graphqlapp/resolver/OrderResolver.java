@@ -1,5 +1,6 @@
 package io.classpath.graphqlapp.resolver;
 
+import io.classpath.graphqlapp.dto.CustomerOrderSummary;
 import io.classpath.graphqlapp.model.LineItem;
 import io.classpath.graphqlapp.model.Order;
 import io.classpath.graphqlapp.model.Product;
@@ -47,6 +48,17 @@ public class OrderResolver {
     public Set<Order> ordersByCustomer(@Argument String name){
         System.out.println("Inside the ordersByCustomer method ::");
         return this.orderService.findByCustomerName(name);
+    }
+
+
+    @QueryMapping
+    public Set<Order> ordersByDateRange(@Argument String start, @Argument String end){
+        return this.orderService.findByDateRange(start, end);
+    }
+
+    @QueryMapping
+    public Set<CustomerOrderSummary> topCustomers(@Argument int limit) {
+        return this. orderService.getTopCustomers(limit);
     }
 
 
