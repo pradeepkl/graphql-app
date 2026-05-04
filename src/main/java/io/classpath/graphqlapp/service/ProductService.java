@@ -16,4 +16,8 @@ public class ProductService {
     public Set<Product> fetchALl(){
         return Set.copyOf(this.productrepository.findAll());
     }
+
+    public Product getProduct(Long id){
+        return this.productrepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid product id"));
+    }
 }

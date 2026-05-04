@@ -2,8 +2,10 @@ package io.classpath.graphqlapp.resolver;
 
 import io.classpath.graphqlapp.model.LineItem;
 import io.classpath.graphqlapp.model.Order;
+import io.classpath.graphqlapp.model.Product;
 import io.classpath.graphqlapp.service.LineItemService;
 import io.classpath.graphqlapp.service.OrderService;
+import io.classpath.graphqlapp.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -19,6 +21,7 @@ public class OrderResolver {
 
     private final OrderService orderService;
     private final LineItemService lineItemService;
+    private final ProductService productService;
 
     @QueryMapping
     public Set<Order> orders(){
@@ -33,6 +36,11 @@ public class OrderResolver {
     @SchemaMapping(typeName = "Order", field = "lineItems")
     public List<LineItem> lineItems(Order order){
         return this.lineItemService.getByOrderId(order.getId());
+    }
+
+    @SchemaMapping(typeName = "LineItem", field = "product")
+    public Product product(LineItem lineItem){
+        return this.productService.getProduct(lineItem.getProductId());
     }
 
 
