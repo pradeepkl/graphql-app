@@ -2,6 +2,7 @@ package io.classpath.graphqlapp.service;
 
 import io.classpath.graphqlapp.dto.CustomerOrderSummary;
 import io.classpath.graphqlapp.dto.OrderPage;
+import io.classpath.graphqlapp.exception.OrderNotFoundException;
 import io.classpath.graphqlapp.model.LineItem;
 import io.classpath.graphqlapp.model.OrderInput;
 import io.classpath.graphqlapp.model.OrderSortField;
@@ -37,7 +38,7 @@ public class OrderService {
     }
 
     public Order getOrder(Long id){
-        return this.orderRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("invalid order id passed "));
+        return this.orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
     }
 
     public Set<Order> findByCustomerName(String name){
@@ -75,6 +76,7 @@ public class OrderService {
        return orderPage;
     }
 
+    @Transactional
     public Order save(OrderInput input){
         Order order = Order.builder().customerName(input.getCustomerName()).email(input.getEmail()).createdDate(LocalDate.now()).build();
         // first save the order and then use the id to populate the line-items
@@ -98,7 +100,7 @@ public class OrderService {
 
     @Transactional
     public Order update(OrderInput input){
-        Order order = this.orderRepository.findById(input.getId()).orElseThrow(() -> new IllegalArgumentException("invalid orderId passed"));
+        Order order = this.orderRepository.findById(input.getId()).orElseThrow(() -> new OrderNotFoundException(input.getId()));
         order.setCustomerName(input.getCustomerName());
         order.setEmail(input.getEmail());
 

@@ -1,5 +1,6 @@
 package io.classpath.graphqlapp.service;
 
+import io.classpath.graphqlapp.exception.ProductNotFroundException;
 import io.classpath.graphqlapp.model.Product;
 import io.classpath.graphqlapp.model.ProductInput;
 import io.classpath.graphqlapp.repo.ProductJpaRepository;
@@ -19,7 +20,7 @@ public class ProductService {
     }
 
     public Product getProduct(Long id){
-        return this.productrepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid product id"));
+        return this.productrepository.findById(id).orElseThrow(() -> new ProductNotFroundException(id));
     }
 
     public Product create(ProductInput input) {
@@ -28,7 +29,7 @@ public class ProductService {
     }
 
     public Product update(ProductInput input){
-        Product product = this.productrepository.findById(input.getId()).orElseThrow(() -> new IllegalArgumentException("invalid product id"));
+        Product product = this.productrepository.findById(input.getId()).orElseThrow(() -> new ProductNotFroundException(input.getId()));
         product.setName(input.getName());
         return this.productrepository.save(product);
     }
