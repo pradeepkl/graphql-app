@@ -1,4 +1,4 @@
-package io.classpath.graphqlapp.dto;
+package io.classpath.graphqlapp.model;
 
 public enum OrderSortField {
     id,

@@ -1,13 +1,16 @@
 package io.classpath.graphqlapp.dto;
 
 import io.classpath.graphqlapp.model.Order;
-import lombok.AllArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
+import static lombok.AccessLevel.PRIVATE;
+
 @Setter
 @AllArgsConstructor
+@Builder
+@NoArgsConstructor(access = PRIVATE)
 public class OrderPage {
 
     private List<Order> content;

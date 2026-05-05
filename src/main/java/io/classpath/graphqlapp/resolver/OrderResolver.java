@@ -2,7 +2,7 @@ package io.classpath.graphqlapp.resolver;
 
 import io.classpath.graphqlapp.dto.CustomerOrderSummary;
 import io.classpath.graphqlapp.dto.OrderPage;
-import io.classpath.graphqlapp.dto.OrderSortField;
+import io.classpath.graphqlapp.model.OrderSortField;
 import io.classpath.graphqlapp.model.LineItem;
 import io.classpath.graphqlapp.model.Order;
 import io.classpath.graphqlapp.model.Product;
@@ -64,8 +64,8 @@ public class OrderResolver {
     }
 
     @QueryMapping
-    public OrderPage ordersPagedSorted(@Argument int offset, @Argument int limit, @Argument OrderSortField sortBy, @Argument String direction ){
-        return this.orderService.getOrdersPagedSorted(offset, limit, sortBy, direction);
+    public OrderPage ordersPagedSorted(@Argument int offset, @Argument int limit, @Argument String direction ){
+        return this.orderService.ordersPagedSorted(offset, limit, direction);
     }
 
 }

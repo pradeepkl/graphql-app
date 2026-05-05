@@ -2,7 +2,7 @@ package io.classpath.graphqlapp.service;
 
 import io.classpath.graphqlapp.dto.CustomerOrderSummary;
 import io.classpath.graphqlapp.dto.OrderPage;
-import io.classpath.graphqlapp.dto.OrderSortField;
+import io.classpath.graphqlapp.model.OrderSortField;
 import io.classpath.graphqlapp.model.Order;
 import io.classpath.graphqlapp.repo.OrderJpaRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -51,12 +52,22 @@ public class OrderService {
     }
 
     //In this method, we will form the query and pass to the repository
-    public OrderPage getOrdersPagedSorted(int offset, int limit, OrderSortField sortBy, String direction){
-        int page = offset/limit;
-        Sort.Direction sortDirection = direction.equalsIgnoreCase("asc") ? ASC: DESC;
-        Pageable pageable = PageRequest.of(page, limit,  sortDirection, sortBy.name());
+    public OrderPage ordersPagedSorted(int offset, int limit, String direction){
+        System.out.println("offset" + offset + " limit "+ limit + " direction "+ direction);
+        int page = offset / limit;
+        Pageable pageable = PageRequest.of(page, limit);
+
         Page<Order> result = this.orderRepository.findAll(pageable);
 
-        return new OrderPage(result.getContent(), result.getNumber(), result.getSize(), result.getTotalElements(), result.getTotalPages());
+        List<Order> orders = result.getContent();
+        int number = result.getNumber();
+        int size = result.getSize();
+        long totalNumberOfElements = result.getTotalElements();
+        int totalPages = result.getTotalPages();
+
+        OrderPage orderPage = OrderPage.builder().totalPages(totalPages).totalElements(totalNumberOfElements).content(orders).size(size).page(number).build();
+
+
+       return orderPage;
     }
 }

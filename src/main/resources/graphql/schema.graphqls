@@ -13,7 +13,12 @@ type Query {
 
   topCustomers(limit: Int!): [CustomerOrderSummary]
 
-  ordersPagedSorted(offset: Int!, limit: Int!, sortBy: OrderSortField!, direction: String!): OrderPage
+  # ordersPagedSorted(offset: Int!, limit: Int!, direction: String!): [Order]
+}
+
+type Mutation {
+  # Create
+  createProduct(input: ProductInput!): Product
 }
 
 type Order {
@@ -53,4 +58,9 @@ type OrderPage {
   size: Int
   totalElements: Int
   totalPages: Int
+}
+
+input ProductInput {
+  id: ID
+  name: String!
 }
