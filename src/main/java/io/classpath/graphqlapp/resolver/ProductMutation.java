@@ -20,4 +20,13 @@ public class ProductMutation {
         return this.productService.create(input);
     }
 
+    @MutationMapping
+    public Product updateProduct(@Argument ProductInput input ){
+        return this.productService.update(input);
+    }
+
+    @MutationMapping
+    public Boolean deleteProduct(@Argument Long id ){
+        return this.productService.delete(id);
+    }
 }

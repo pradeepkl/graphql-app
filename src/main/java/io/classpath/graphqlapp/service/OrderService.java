@@ -2,8 +2,11 @@ package io.classpath.graphqlapp.service;
 
 import io.classpath.graphqlapp.dto.CustomerOrderSummary;
 import io.classpath.graphqlapp.dto.OrderPage;
+import io.classpath.graphqlapp.model.LineItem;
+import io.classpath.graphqlapp.model.OrderInput;
 import io.classpath.graphqlapp.model.OrderSortField;
 import io.classpath.graphqlapp.model.Order;
+import io.classpath.graphqlapp.repo.LineItemJpaRepository;
 import io.classpath.graphqlapp.repo.OrderJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -24,6 +27,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 public class OrderService {
 
     private final OrderJpaRepository orderRepository;
+    private final LineItemJpaRepository lineItemRepository;
 
     public Set<Order> fetchAllOrders(){
         return Set.copyOf(this.orderRepository.findAll());
@@ -40,9 +44,6 @@ public class OrderService {
     public Set<CustomerOrderSummary> getTopCustomers(int limit){
         return Set.copyOf(this.orderRepository.findTopCustomers().stream().limit(limit).toList());
     }
-
-
-
 
     public Set<Order> findByDateRange(String start, String end){
         LocalDate startDate = LocalDate.parse(start);
@@ -69,5 +70,25 @@ public class OrderService {
 
 
        return orderPage;
+    }
+
+    public Order save(OrderInput input){
+        Order order = Order.builder().customerName(input.getCustomerName()).email(input.getEmail()).createdDate(LocalDate.now()).build();
+        // first save the order and then use the id to populate the line-items
+        Order savedOrder = this.orderRepository.save(order);
+
+        if(input.getItems() != null){
+            List<LineItem> items = input.getItems().stream().map( i ->
+                    LineItem.builder()
+                            .id(i.getId())
+                            .orderId(savedOrder.getId())
+                            .productId(i.getProductId())
+                            .qty(i.getQty())
+                            .build()).toList();
+
+            this.lineItemRepository.saveAll(items);
+        }
+        return savedOrder;
+
     }
 }

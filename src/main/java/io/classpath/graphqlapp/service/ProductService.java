@@ -26,4 +26,15 @@ public class ProductService {
         Product product = Product.builder().name(input.getName()).build();
         return this.productrepository.save(product);
     }
+
+    public Product update(ProductInput input){
+        Product product = this.productrepository.findById(input.getId()).orElseThrow(() -> new IllegalArgumentException("invalid product id"));
+        product.setName(input.getName());
+        return this.productrepository.save(product);
+    }
+
+    public boolean delete(long id){
+        this.productrepository.deleteById(id);
+        return true;
+    }
 }

@@ -19,6 +19,15 @@ type Query {
 type Mutation {
   # Create
   createProduct(input: ProductInput!): Product
+
+  # Update
+  updateProduct(input: ProductInput!): Product
+
+  # Delete
+  deleteProduct(id: ID!): Boolean
+
+  # Create Order
+  createOrder(input: OrderInput!): Order
 }
 
 type Order {
@@ -63,4 +72,17 @@ type OrderPage {
 input ProductInput {
   id: ID
   name: String!
+}
+
+input OrderInput {
+  id: ID
+  customerName: String!
+  email: String!
+  items: [LineItemInput!]!
+}
+
+input LineItemInput {
+  id: ID
+  productId: ID!
+  qty: Int!
 }
