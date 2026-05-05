@@ -6,6 +6,7 @@ import io.classpath.graphqlapp.model.LineItem;
 import io.classpath.graphqlapp.model.OrderInput;
 import io.classpath.graphqlapp.model.OrderSortField;
 import io.classpath.graphqlapp.model.Order;
+import io.classpath.graphqlapp.publisher.OrderPublisher;
 import io.classpath.graphqlapp.repo.LineItemJpaRepository;
 import io.classpath.graphqlapp.repo.OrderJpaRepository;
 import jakarta.transaction.Transactional;
@@ -29,6 +30,7 @@ public class OrderService {
 
     private final OrderJpaRepository orderRepository;
     private final LineItemJpaRepository lineItemRepository;
+    private final OrderPublisher orderPublisher;
 
     public Set<Order> fetchAllOrders(){
         return Set.copyOf(this.orderRepository.findAll());
@@ -89,6 +91,8 @@ public class OrderService {
 
             this.lineItemRepository.saveAll(items);
         }
+        System.out.println("Came inside the save order of order service ::::");
+        this.orderPublisher.publish(savedOrder);
         return savedOrder;
     }
 

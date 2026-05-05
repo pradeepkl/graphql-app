@@ -34,6 +34,11 @@ type Mutation {
   deleteOrder(id: ID!): Boolean
 }
 
+type Subscription {
+  orderCreated: Order
+
+}
+
 type Order {
   id: ID!
   customerName: String
