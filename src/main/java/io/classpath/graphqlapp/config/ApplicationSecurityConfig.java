@@ -15,10 +15,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableMethodSecurity
-public class SecurityConfig {
+public class ApplicationSecurityConfig {
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
+    public WebMvcConfigurer corsConfigurer(){
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
@@ -31,32 +31,27 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-                )
-                .httpBasic(Customizer.withDefaults());
-        return http.build();
+    //completes our authentication
+    public UserDetailsService userDetailsService(){
+        UserDetails admin = User.builder().username("admin").password("{noop}admin123").roles("ADMIN", "USER").build();
+        UserDetails superAdmin = User.builder().username("super-admin").password("{noop}admin123").roles("ADMIN", "SUPER_ADMIN", "USER").build();
+        UserDetails user = User.builder().username("user").password("{noop}user123").roles("USER").build();
+
+        return new InMemoryUserDetailsManager(user, admin, superAdmin);
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity){
+        httpSecurity.csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
+                .authorizeHttpRequests( auth -> auth
+                        .requestMatchers("/graphql","/graphql**", "/graphql/**", "/grapihql","/graphiql**","/graphiql/**", "/graphiql/**", "/about-us/**", "/login**", "/logount**", "/contact-us/**").permitAll()
+                        .anyRequest()
+                        .authenticated()
+                ).httpBasic(Customizer.withDefaults());
 
-        UserDetails admin = User.builder()
-                .username("admin")
-                .password("{noop}admin123")
-                .roles("ADMIN")
-                .build();
+        return httpSecurity.build();
 
-        UserDetails user = User.builder()
-                .username("user")
-                .password("{noop}user123")
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(admin, user);
     }
+
 }

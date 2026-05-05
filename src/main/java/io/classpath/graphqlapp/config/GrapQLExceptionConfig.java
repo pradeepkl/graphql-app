@@ -10,8 +10,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.graphql.execution.DataFetcherExceptionResolver;
 import org.springframework.graphql.execution.ErrorType;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import reactor.core.publisher.Mono;
 
+import java.nio.file.AccessDeniedException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -37,6 +39,16 @@ public class GrapQLExceptionConfig {
             if(exception instanceof ConstraintViolationException){
                 return Mono.just(List.of(buildError(exception.getMessage(), "BAD_REQUEST", environment, ErrorType.BAD_REQUEST)));
             }
+
+            if(exception instanceof AuthorizationDeniedException){
+                return Mono.just(List.of(buildError(exception.getMessage(), "UNAUTHORIZED", environment, ErrorType.UNAUTHORIZED)));
+            }
+
+
+            if(exception instanceof AccessDeniedException){
+                return Mono.just(List.of(buildError(exception.getMessage(), "FORBIDDEN", environment, ErrorType.FORBIDDEN)));
+            }
+
             System.out.println(exception);
             return Mono.just(List.of(buildError("Internal server error ", "INTERNAL_ERROR", environment, ErrorType.INTERNAL_ERROR)));
         });

@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -27,11 +28,13 @@ public class OrderResolver {
     private final ProductService productService;
 
     @QueryMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN', 'MANAGER', 'STORE_MANAGER')")
     public Set<Order> orders(){
         return this.orderService.fetchAllOrders();
     }
 
     @QueryMapping
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN', 'SUPER_ADMIN', 'MANAGER', 'STORE_MANAGER')")
     public Order order(@Argument Long id){
         return this.orderService.getOrder(id);
     }
