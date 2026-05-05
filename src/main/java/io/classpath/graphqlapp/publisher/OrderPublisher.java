@@ -11,6 +11,7 @@ public class OrderPublisher {
     private final Sinks.Many<Order> sink = Sinks.many().multicast().onBackpressureBuffer();
 
     public void publish(Order order) {
+        System.out.println("Came inside the publish method");
         sink.tryEmitNext(order);
     }
 

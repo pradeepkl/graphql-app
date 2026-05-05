@@ -20,5 +20,5 @@ spring:
   graphql:
     graphiql:
       enabled: true
-  websocket:
-    path: /graphql
+    websocket:
+      path: /graphql

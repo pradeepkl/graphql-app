@@ -16,6 +16,7 @@ public class ProductMutation {
     private final ProductService productService;
 
     @MutationMapping
+
     public Product createProduct(@Valid @Argument ProductInput input) {
 
         return this.productService.create(input);

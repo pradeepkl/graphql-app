@@ -5,6 +5,7 @@ import graphql.GraphqlErrorBuilder;
 import graphql.schema.DataFetchingEnvironment;
 import io.classpath.graphqlapp.exception.OrderNotFoundException;
 import io.classpath.graphqlapp.exception.ProductNotFroundException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.graphql.execution.DataFetcherExceptionResolver;
@@ -32,6 +33,11 @@ public class GrapQLExceptionConfig {
             if(exception instanceof ProductNotFroundException){
                 return Mono.just(List.of(buildError("product not found", "NOT_FOUND", environment, ErrorType.NOT_FOUND)));
             }
+
+            if(exception instanceof ConstraintViolationException){
+                return Mono.just(List.of(buildError(exception.getMessage(), "BAD_REQUEST", environment, ErrorType.BAD_REQUEST)));
+            }
+            System.out.println(exception);
             return Mono.just(List.of(buildError("Internal server error ", "INTERNAL_ERROR", environment, ErrorType.INTERNAL_ERROR)));
         });
     }
