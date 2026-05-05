@@ -18,4 +18,14 @@ public class OrderMutation {
     public Order createOrder(@Argument OrderInput input){
         return this.orderService.save(input);
     }
+
+    @MutationMapping
+    public Order updateOrder(@Argument OrderInput input){
+        return this.orderService.update(input);
+    }
+
+    @MutationMapping
+    public Boolean deleteOrder(@Argument Long id){
+        return this.orderService.delete(id);
+    }
 }

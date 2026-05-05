@@ -8,6 +8,7 @@ import io.classpath.graphqlapp.model.OrderSortField;
 import io.classpath.graphqlapp.model.Order;
 import io.classpath.graphqlapp.repo.LineItemJpaRepository;
 import io.classpath.graphqlapp.repo.OrderJpaRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -89,6 +90,37 @@ public class OrderService {
             this.lineItemRepository.saveAll(items);
         }
         return savedOrder;
+    }
 
+    @Transactional
+    public Order update(OrderInput input){
+        Order order = this.orderRepository.findById(input.getId()).orElseThrow(() -> new IllegalArgumentException("invalid orderId passed"));
+        order.setCustomerName(input.getCustomerName());
+        order.setEmail(input.getEmail());
+
+        // delete all the old line items for the current order
+        this.lineItemRepository.deleteAll(lineItemRepository.findByOrderId(order.getId()));
+
+        //add the new line items
+        if(input.getItems()!= null){
+            List<LineItem> items = input.getItems().stream().map(i -> LineItem.builder()
+                    .id(i.getId())
+                    .orderId(order.getId())
+                    .productId(i.getProductId())
+                    .qty(i.getQty())
+                    .build()).toList();
+            this.lineItemRepository.saveAll(items);
+        }
+        return this.orderRepository.save(order);
+    }
+
+    public Boolean delete(Long id){
+        if(!this.orderRepository.existsById(id)){
+            throw new IllegalArgumentException("invalid order id passed ");
+        }
+        List<LineItem> lineItems = this.lineItemRepository.findByOrderId(id);
+        this.lineItemRepository.deleteAll(lineItems);
+        this.orderRepository.deleteById(id);
+        return true;
     }
 }
